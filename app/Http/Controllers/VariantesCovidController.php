@@ -30,9 +30,57 @@ class VariantesCovidController extends Controller
         $nuevaVariante -> assigned_number = $request -> input('assigned_number');
         $nuevaVariante -> description = $request -> input('description');
         $nuevaVariante -> who_name = $request -> input('who_name');
-        $nuevaVariante -> save();
+        if ($nuevaVariante -> save()){
+            return redirect() -> route('variantes.index') -> with('success', 'A new variant has been succesfully added');
+        }
 
         //Despues de guardar, que me mande a la lista de variantes
-        return redirect() -> route('variantes.index');
+        return redirect() -> route('variantes.index') -> with('error', 'Unable to add new variant');
+    }
+
+    public function edit($id) {
+        $variante = Variante::find($id);
+        $argumentos = array();
+        $argumentos['variante'] = $variante;
+        //find regresa un registro si lo encuentra
+        //si no lo encuentra regresa null
+        if($variante != NULL){
+            //Me lleva al form de edicion
+            return view('variantes.edit', $argumentos);
+        }
+        return redirect() -> route('variantes.index') -> with('error', 'Unable to find variant');
+    }
+
+    public function update(Request $request, $id){
+        $variante = Variante::find($id);
+
+        if($variante){
+            $variante -> lineage = $request -> input('lineage');
+            $variante -> common_countries = $request -> input('common_countries');
+            $variante -> earliest_date = $request -> input('earliest_date');
+            $variante -> designated_number = $request -> input('designated_number');
+            $variante -> assigned_number = $request -> input('assigned_number');
+            $variante -> description = $request -> input('description');
+            $variante -> who_name = $request -> input('who_name');
+
+            if ($variante -> save()){
+                return redirect() -> route('variantes.edit', $id) -> with('success', 'Variant succesfully updated');
+            }
+            return redirect() -> route('variantes.edit', $id) -> with('error', 'Unable to updated');
+            
+        }
+        return redirect() -> route('variantes.index') -> with('error', 'Unable to find variant');
+    }
+
+    public function destroy($id){
+        $variante = Variante::find($id);
+
+        if($variante){
+            if ($variante -> delete()){
+                return redirect() -> route('variantes.index') -> with('success', 'Variant deleted');
+            }
+            return redirect() -> route('variantes.index') -> with('error', 'Unable to delete variant');
+        }
+        return redirect() -> route('variantes.index') -> with('error', 'Unable to find variant');
     }
 }

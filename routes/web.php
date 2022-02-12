@@ -24,9 +24,12 @@ Route::get('/variantes', 'VariantesCovidController@index') -> name('variantes.in
 
 Route::get('/variantes/create', 'VariantesCovidController@create') -> name('variantes.create');
 
+Route::get('/variantes/{id}/edit', 'VariantesCovidController@edit') -> name('variantes.edit');
+
 Route::post('/variantes/store', 'VariantesCovidController@store') -> name('variantes.store');
 
+Route::put('/variantes/{id}', 'VariantesCovidController@update') -> name('variantes.update');
 
-
+Route::delete('/variantes/{id}', 'VariantesCovidController@destroy') -> name('variantes.destroy');
 /*Route::get('/variantes', 
     [VariantesCovidController::class,'index']);*/
